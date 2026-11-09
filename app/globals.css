@@ -1,49 +1,930 @@
+/* ==========================================================================
+   Design system — "the record"
+   Paper, ink, one oxblood accent. Serif for reading, system sans for labels.
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colour */
+  --paper: #f3f0e8;
+  --paper-deep: #e9e5d9;
+  --ink: #15130f;
+  --ink-soft: #4d483f; /* 8.0:1 on paper */
+  --rule: rgb(21 19 15 / 0.18);
+  --accent: #9c2a1c; /* 6.6:1 on paper */
+
+  --night: #131210;
+  --night-raised: #1d1b18;
+  --night-ink: #f0ebe0;
+  --night-soft: #b1ab9e; /* 8.2:1 on night */
+  --night-rule: rgb(240 235 224 / 0.18);
+  --night-accent: #ea7a62; /* 6.9:1 on night */
+
+  /* Type */
+  --serif: var(--font-serif), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Space: one scale, in rem so it follows the reader's text size */
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --section: clamp(5rem, 11vw, 10rem);
+  --masthead: 3.5rem;
+
+  /* Motion: critically damped, no overshoot */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  background: var(--paper);
+  scroll-padding-top: calc(var(--masthead) + 1.5rem);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  line-height: 1.55;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
 }
 
 a {
   color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.wrap {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  top: -4rem;
+  z-index: 20;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 0.875rem/1 var(--sans);
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+.skip:focus {
+  top: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Type roles
+   -------------------------------------------------------------------------- */
+
+/* Small text: sans, positive tracking */
+.label {
+  font: 600 0.75rem/1.4 var(--sans);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.label--accent {
+  color: var(--accent);
+}
+
+/* Mid-size headings: tightened tracking and leading */
+.title {
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.lead {
+  font-size: clamp(1.45rem, 2.5vw, 2.125rem);
+  line-height: 1.26;
+  letter-spacing: -0.014em;
+  max-width: 28em;
+  text-wrap: pretty;
+}
+
+.lead--tight {
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  line-height: 1.3;
+}
+
+.prose {
+  max-width: 36em;
+  color: var(--ink-soft);
+}
+
+.prose p + p {
+  margin-top: 1em;
+}
+
+.subhead {
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* --------------------------------------------------------------------------
+   Masthead — a translucent layer the page scrolls beneath
+   -------------------------------------------------------------------------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgb(243 240 232 / 0.78);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: var(--masthead);
+}
+
+.masthead__name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.masthead__nav ul {
+  display: flex;
+  gap: clamp(0.25rem, 1.2vw, 1rem);
+}
+
+.masthead__nav a {
+  display: block;
+  padding: 0.7rem 0.5rem;
+  font: 500 0.8125rem/1 var(--sans);
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: inset 0 -2px 0 transparent;
+  transition:
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.masthead__nav a:hover {
+  color: var(--ink);
+}
+
+.masthead__nav a[aria-current] {
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+@media (max-width: 52rem) {
+  :root {
+    --masthead: 5.75rem;
+  }
+
+  .masthead__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding-top: 0.75rem;
+  }
+
+  /* The section links become one swipeable row, bled to the screen edge */
+  .masthead__nav {
+    margin-inline: calc(var(--gutter) * -1);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+  }
+
+  .masthead__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .masthead__nav ul {
+    width: max-content;
+    padding-inline: calc(var(--gutter) - 0.5rem) 2.5rem;
+  }
+
+  .masthead__nav a {
+    padding-block: 0.9rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  padding-top: clamp(3rem, 8vw, 7rem);
+  padding-bottom: var(--section);
+}
+
+.hero__roles {
+  color: var(--accent);
+}
+
+/* Display size: the tightest tracking and leading on the page */
+.hero__name {
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+  font-size: clamp(3.25rem, 12.5vw, 11.5rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.hero__lower {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  align-items: start;
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+}
+
+.hero__text {
+  grid-column: 1 / span 7;
+}
+
+.hero__standfirst {
+  font-size: clamp(1.45rem, 2.7vw, 2.375rem);
+  font-style: italic;
+  line-height: 1.22;
+  letter-spacing: -0.016em;
+  text-wrap: pretty;
+}
+
+.hero__lower .photo {
+  grid-column: 9 / span 4;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 2.25rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.figures__item {
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.figures dt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.5rem;
+}
+
+.figures__value {
+  font-size: clamp(2.5rem, 4.8vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: lining-nums;
+}
+
+.figures__unit {
+  font-size: 1.0625rem;
+  font-style: italic;
+}
+
+.figures dd {
+  margin-top: 0.6rem;
+  max-width: 17em;
+  font: 400 0.875rem/1.45 var(--sans);
+  color: var(--ink-soft);
+}
+
+@media (max-width: 52rem) {
+  .hero__lower {
+    display: block;
+  }
+
+  .hero__lower .photo {
+    margin-top: 2.5rem;
+    max-width: 22rem;
+  }
+
+  .figures {
+    column-gap: 1.25rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Photograph slots
+   -------------------------------------------------------------------------- */
+
+.photo__frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+}
+
+.photo--portrait .photo__frame {
+  aspect-ratio: 4 / 5;
+}
+
+.photo--wide .photo__frame {
+  aspect-ratio: 16 / 7;
+}
+
+/* An unfilled wide slot stays modest so the gap does not dominate the page */
+.photo--wide.photo--empty .photo__frame {
+  aspect-ratio: auto;
+  height: clamp(9rem, 16vw, 13rem);
+}
+
+.photo__frame img {
+  object-fit: cover;
+}
+
+.photo__brief {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1.1rem 1.25rem;
+  font: 400 0.875rem/1.45 var(--sans);
+  color: var(--ink-soft);
+}
+
+.photo__brief .label {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.photo figcaption {
+  margin-top: 0.6rem;
+  font: 400 0.75rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Sections — a margin label and a reading column
+   -------------------------------------------------------------------------- */
+
+.section {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  padding-block: var(--section);
+  border-top: 1px solid var(--ink);
+}
+
+.section__head {
+  grid-column: 1 / span 3;
+}
+
+.section__head .label {
+  position: sticky;
+  top: calc(var(--masthead) + 1.5rem);
+  color: var(--ink);
+}
+
+.section__body {
+  grid-column: 4 / -1;
+  min-width: 0;
+}
+
+.section__body > .prose {
+  margin-top: 2rem;
+}
+
+@media (max-width: 52rem) {
+  .section {
+    display: block;
+  }
+
+  .section__head {
+    margin-bottom: 2rem;
+  }
+
+  .section__head .label {
+    position: static;
+  }
+}
+
+/* Disciplines: a numbered ledger, not a card grid */
+.disciplines {
+  counter-reset: discipline;
+}
+
+.disciplines li {
+  counter-increment: discipline;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: var(--gutter);
+  align-items: baseline;
+  padding-block: 1.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.disciplines li::before {
+  content: counter(discipline, decimal-leading-zero);
+  font: 600 0.75rem/1 var(--sans);
+  letter-spacing: 0.09em;
+  color: var(--accent);
+}
+
+.disciplines h4 {
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.disciplines p {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 52rem) {
+  .disciplines li {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+
+  .disciplines p {
+    grid-column: 2;
+    margin-top: 0.4rem;
+  }
+}
+
+/* Newsroom posts */
+.post + .post {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.post .title {
+  font-size: clamp(2rem, 4.6vw, 3.75rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.post__role {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+.post__note {
+  display: block;
+  margin-top: 0.35rem;
+  font: 600 0.75rem/1.4 var(--sans);
+  font-style: normal;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.post .prose {
+  margin-top: 1.5rem;
+}
+
+/* Investigations */
+.ledger {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 5fr);
+  column-gap: var(--gutter);
+  align-items: start;
+}
+
+.ledger__figure {
+  font-size: clamp(6rem, 17vw, 15rem);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: var(--accent);
+}
+
+.subjects {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.subjects li {
+  padding-block: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1.1875rem;
+}
+
+.cases {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 3rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+}
+
+.case {
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.case .label + .title {
+  margin-top: 0.75rem;
+}
+
+.case p:not(.label) {
+  margin-top: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.plain {
+  margin-top: 0.9rem;
+}
+
+.plain li {
+  padding-block: 0.55rem;
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 52rem) {
+  .ledger,
+  .cases {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ledger__figure {
+    margin-bottom: 2rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Field — the single dark passage
+   -------------------------------------------------------------------------- */
+
+.field {
+  padding-block: var(--section);
+  background: var(--night);
+  color: var(--night-ink);
+}
+
+.field ::selection {
+  background: var(--night-ink);
+  color: var(--night);
+}
+
+.field :focus-visible {
+  outline-color: var(--night-accent);
+}
+
+.field .label {
+  color: var(--night-soft);
+}
+
+.field .label--accent {
+  color: var(--night-accent);
+}
+
+.field__title {
+  margin-top: 1.25rem;
+  font-size: clamp(3rem, 10vw, 8.5rem);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.042em;
+}
+
+.field .photo {
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+}
+
+.field .photo__frame {
+  background: var(--night-raised);
+  border-color: var(--night-rule);
+}
+
+.field .photo__brief {
+  color: var(--night-soft);
+}
+
+.dispatches {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--night-ink);
+}
+
+.dispatches__group {
+  grid-column: 1 / span 3;
+}
+
+.dispatches ul {
+  grid-column: 4 / -1;
+}
+
+.dispatch {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: var(--gutter);
+  align-items: baseline;
+  padding-bottom: 1.75rem;
+}
+
+.dispatch + .dispatch {
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--night-rule);
+}
+
+.dispatch__place {
+  font-size: clamp(1.6rem, 2.9vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+.dispatch p {
+  color: var(--night-soft);
+}
+
+@media (max-width: 52rem) {
+  .dispatches,
+  .dispatch {
+    display: block;
+  }
+
+  .dispatches__group {
+    margin-bottom: 1.75rem;
+  }
+
+  .dispatch p {
+    margin-top: 0.6rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Podium and education
+   -------------------------------------------------------------------------- */
+
+.section#podium {
+  border-top: 0;
+}
+
+.champion__heading {
+  margin-block: 0.9rem 1.5rem;
+  font-size: clamp(2.75rem, 8.4vw, 7.25rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.education li {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: var(--gutter);
+  align-items: baseline;
+  padding-block: 1.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.education h4 {
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.education p {
+  color: var(--ink-soft);
+}
+
+.distinction {
+  display: block;
+  margin-top: 0.35rem;
+  font: 600 0.75rem/1.4 var(--sans);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+@media (max-width: 52rem) {
+  .education li {
+    display: block;
+  }
+
+  .education p {
+    margin-top: 0.4rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Contact and footer
+   -------------------------------------------------------------------------- */
+
+.contact {
+  padding-block: var(--section);
+  border-top: 1px solid var(--ink);
+}
+
+.contact__title {
+  margin-top: 1.25rem;
+  max-width: 14em;
+  font-size: clamp(2.25rem, 6.4vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.036em;
+  text-wrap: balance;
+}
+
+.enquiries {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  border-top: 1px solid var(--ink);
+}
+
+.enquiries li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.enquiries a,
+.enquiries--pending span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.15rem;
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.014em;
+  text-decoration: none;
+}
+
+/* Feedback lands on press, not on release */
+.enquiries a {
+  transform-origin: left center;
+  transition:
+    color 160ms ease,
+    transform 320ms var(--ease);
+}
+
+.enquiries a span:last-child {
+  transition: transform 320ms var(--ease);
+}
+
+.enquiries a:hover {
+  color: var(--accent);
+}
+
+.enquiries a:hover span:last-child {
+  transform: translateX(0.35rem);
+}
+
+.enquiries a:active {
+  transform: scale(0.985);
+  transition-duration: 160ms, 100ms;
+}
+
+.enquiries--pending span {
+  color: var(--ink-soft);
+}
+
+.pending {
+  margin-top: 1.25rem;
+  font: 400 0.875rem/1.5 var(--sans);
+  color: var(--accent);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.75rem 2.5rem;
+  border-top: 1px solid var(--rule);
+  font: 400 0.8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+
+.footer a {
+  text-underline-offset: 0.2em;
+}
+
+/* --------------------------------------------------------------------------
+   Motion
+   Reveals are tied to the scroll position itself, so they follow the reader's
+   hand, stop when they stop and reverse when they reverse. Browsers without
+   scroll-driven animation simply show the content.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
   html {
-    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+
+  .enquiries a:active,
+  .enquiries a:hover span:last-child {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .masthead {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ink-soft: #2a2620;
+    --rule: var(--ink);
+    --night-soft: #e2dccf;
+    --night-rule: var(--night-ink);
+  }
+
+  .masthead {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media print {
+  .masthead,
+  .skip {
+    display: none;
+  }
+
+  .field {
+    background: none;
+    color: var(--ink);
   }
 }

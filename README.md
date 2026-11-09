@@ -1,36 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Journalist portfolio
 
-## Getting Started
+A single-page editorial portfolio built with Next.js (App Router) and plain CSS. No UI or animation dependencies.
 
-First, run the development server:
+## Before launch
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Everything below lives in `content/profile.ts`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Name** — `NAME` is set to "Akash". Change it here if a fuller form is wanted.
+2. **Contact email** — set `CONTACT_EMAIL`. The three enquiry lines in the Contact section then become mail links.
+3. **Site URL** — set the `NEXT_PUBLIC_SITE_URL` environment variable to the production address.
+4. **Photographs** — put files in `public/` and pass `src`, `alt` and `credit` to the two `<PhotoSlot>` elements in `app/page.tsx` (portrait in the hero, a wide field photograph in the Field section).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Content rules
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All copy comes from the supplied profile document, with each block in `content/profile.ts` citing the document heading it came from. The document gives no dates for the newsroom posts, no contact details and no photographs, so none are shown.
 
-## Learn More
+## Commands
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    npm run dev      # local development
+    npm run build    # production build (fully static)
+    npm run lint
