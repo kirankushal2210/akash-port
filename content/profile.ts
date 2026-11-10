@@ -1,51 +1,104 @@
 /**
- * Single source of truth for every word on the site.
+ * Single source of truth for every word and contact detail on the site.
  *
- * Source: "Website_Profile_Content_British_English.docx". The document has no
- * page numbers, so each block below cites the document heading it came from.
- * Nothing here is invented: where the document is silent, the value is a
- * clearly marked placeholder (see PLACEHOLDERS).
+ * Sources:
+ * - "Website_Profile_Content_British_English.docx"
+ * - Official visiting card and campaign poster supplied by the site owner
  */
 
 /* ------------------------------------------------------------------ */
-/* PLACEHOLDERS — replace these before launch                          */
+/* Identity & Public Office                                            */
 /* ------------------------------------------------------------------ */
 
-/** Supplied by the site owner; the document never states the subject's name. */
-export const NAME = "Akash";
+export const NAME = "Akash Kolluru";
+export const NAME_FIRST = "Akash";
+export const NAME_LAST = "Kolluru";
+export const NAME_TE = "ఆకాశ్ కొల్లూరు";
+export const MONOGRAM = "AK";
 
-/** No contact details are in the document. Leave empty to show a notice. */
-export const CONTACT_EMAIL = "";
+export const CONTACT_EMAIL = "akash.kolluru@gmail.com";
+export const CONTACT_PHONE = "+91 8886592089";
+
+export const PUBLIC_OFFICE = {
+  party: "Telangana Rakshana Sena (TRS)",
+  partyShort: "TRS",
+  candidacy: "MLC Graduates Candidate",
+  constituency: "Hyderabad – Ranga Reddy – Mahabubnagar",
+  pill: "Telangana Rakshana Sena · MLC Graduates Candidate",
+} as const;
 
 /** Production URL, used for canonical links and social previews. */
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3400";
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3400");
 
 export const NAME_IS_PLACEHOLDER = NAME.startsWith("[");
 
 /* ------------------------------------------------------------------ */
-/* Identity — source: title block                                      */
+/* Social & Media Channels — from the official visiting card           */
+/* ------------------------------------------------------------------ */
+
+export type SocialChannel = {
+  label: string;
+  handle: string;
+  /** Direct profile URL where unambiguously verified; optional otherwise. */
+  href?: string;
+};
+
+export const socials: readonly SocialChannel[] = [
+  {
+    label: "Instagram",
+    handle: "/akashkolluru",
+    href: "https://www.instagram.com/akashkolluru/",
+  },
+  {
+    label: "YouTube",
+    handle: "/AkashKolluruTRS",
+    href: "https://www.youtube.com/@AkashKolluruTRS",
+  },
+  {
+    label: "X",
+    handle: "/akash_kolluru",
+    href: "https://x.com/akash_kolluru",
+  },
+  {
+    label: "Facebook",
+    handle: "/Akash Kolluru",
+  },
+  {
+    label: "LinkedIn",
+    handle: "/Akash Kolluru",
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Identity — source: title block & supplied card/poster               */
 /* ------------------------------------------------------------------ */
 
 export const roles = [
   "Investigative journalist",
   "Strategic communications leader",
   "Orator",
+  "MLC Graduates Candidate (TRS)",
 ] as const;
 
 export const metaDescription =
-  "Investigative journalist, strategic communications leader and champion orator. Formerly Senior Editor & Head of South at Dailyhunt Media Group, with reporting for Republic TV, India Today and CNN News18.";
+  "Akash Kolluru — investigative journalist, strategic communications leader, champion orator and Telangana Rakshana Sena (TRS) MLC Graduates Candidate for Hyderabad – Ranga Reddy – Mahabubnagar. Formerly Senior Editor & Head of South at Dailyhunt Media Group, with reporting for Republic TV, India Today and CNN News18.";
 
 /* Source: Executive Summary */
 export const standfirst =
-  "A reporting career across India's top three national broadcast news networks, the editorial leadership of Dailyhunt Media Group in the South, and a championship record at the podium.";
+  "A reporting career across India's top three national broadcast news networks, editorial leadership at Dailyhunt Media Group in the South, a championship record at the podium — and public representation as TRS MLC Graduates Candidate.";
 
 /* Source: Executive Summary; High-Impact Investigations; Oratory */
 export const figures = [
   {
     value: "19",
     unit: "years, 6 months",
-    caption: "His age on entering national broadcast media",
+    caption: "Age on entering national broadcast media",
   },
   {
     value: "3",
@@ -72,8 +125,10 @@ export const profile = {
   lead: "He stepped into national broadcast media at nineteen years and six months old. Since 2017 he has been the only journalist from Telangana to operate out of the national media ecosystem of the NCR.",
   body: [
     "His career joins two kinds of work that seldom sit together: ground reporting from conflict zones and natural disasters, and deep investigative journalism. That work has directly influenced public policy, legal precedents and national discourse.",
-    "Beyond journalism he is a University Gold Medallist in Political Science, Mass Communication and English Literature, and the winner of the Master Orator Championship from a field of more than 2,500 speakers across South India. He now brings investigative rigour to strategic narrative architecture and public advisory.",
+    "Beyond journalism he is a University Gold Medallist in Political Science, Mass Communication and English Literature, and the winner of the Master Orator Championship from a field of more than 2,500 speakers across South India. Bringing investigative rigour to strategic narrative architecture, public advisory and democratic representation, he is contesting as the Telangana Rakshana Sena (TRS) MLC Graduates Candidate for Hyderabad – Ranga Reddy – Mahabubnagar.",
   ],
+  callout:
+    "Investigative rigour on the record, strategic clarity in public life, and direct representation for graduates across Hyderabad, Ranga Reddy and Mahabubnagar.",
 };
 
 /* Source: Core Pillars of Expertise */
@@ -97,11 +152,27 @@ export const disciplines = [
 ] as const;
 
 /* ------------------------------------------------------------------ */
-/* Newsrooms — source: Professional Experience & Career Milestones     */
-/* The document gives no start or end dates for either post.           */
+/* Newsrooms & Public Life                                             */
 /* ------------------------------------------------------------------ */
 
-export const newsrooms = [
+export type CareerPost = {
+  organisation: string;
+  role: string;
+  note: string;
+  period?: string;
+  points: readonly string[];
+};
+
+export const newsrooms: readonly CareerPost[] = [
+  {
+    organisation: "Telangana Rakshana Sena (TRS)",
+    role: "MLC Graduates Candidate — Hyderabad, Ranga Reddy & Mahabubnagar",
+    note: "Public Life & Representation",
+    points: [
+      "Representing the Hyderabad – Ranga Reddy – Mahabubnagar Graduates' constituency with a platform rooted in institutional accountability, youth opportunity and graduate welfare.",
+      "Bringing frontline investigative discipline and clear public advocacy to policy dialogue across Telangana.",
+    ],
+  },
   {
     organisation: "Dailyhunt Media Group",
     role: "Senior Editor & Head of South",
@@ -120,14 +191,25 @@ export const newsrooms = [
       "Anchored high-intensity news bulletins, led special investigative feature broadcasts and coordinated live field operations across multi-state elections.",
     ],
   },
-] as const;
+];
 
 /* ------------------------------------------------------------------ */
 /* Investigations — source: High-Impact Investigations & Legal         */
 /* Precedents                                                          */
 /* ------------------------------------------------------------------ */
 
-export const investigations = {
+export type InvestigationCase = {
+  marker: string;
+  title: string;
+  text: string;
+  href?: string;
+};
+
+export const investigations: {
+  intro: string;
+  subjects: readonly string[];
+  cases: readonly InvestigationCase[];
+} = {
   intro:
     "More than fifteen national-level investigations, each a landmark exposé. Their subjects:",
   subjects: [
@@ -149,7 +231,7 @@ export const investigations = {
       text: "His investigative reporting and evidence packages were formally cited in sworn affidavits before the Supreme Court by premier federal investigative bodies, including the Central Bureau of Investigation. The result was legal prosecution and convictions.",
     },
   ],
-} as const;
+};
 
 /* ------------------------------------------------------------------ */
 /* Field — source: Ground, Election & Conflict Coverage                */
@@ -228,7 +310,8 @@ export const podium = {
 export const education = [
   {
     institution: "Osmania University",
-    award: "Bachelor of Arts, triple major in Political Science, Mass Communication and English Literature",
+    award:
+      "Bachelor of Arts, triple major in Political Science, Mass Communication and English Literature",
     distinction: "Gold Medallist",
   },
   {
@@ -244,19 +327,22 @@ export const education = [
 ] as const;
 
 /* ------------------------------------------------------------------ */
-/* Contact — enquiry types follow the document's pillars. No address   */
-/* is given in the document.                                           */
+/* Contact & Navigation                                                */
 /* ------------------------------------------------------------------ */
 
 export const enquiries = [
   { label: "Speaking invitations", subject: "Speaking invitation" },
   { label: "Media requests", subject: "Media request" },
   { label: "Advisory and collaborations", subject: "Advisory enquiry" },
+  {
+    label: "MLC Constituency & Public Representation",
+    subject: "MLC Graduates Constituency representation",
+  },
 ] as const;
 
 export const sections = [
   { id: "profile", label: "Profile" },
-  { id: "newsrooms", label: "Newsrooms" },
+  { id: "newsrooms", label: "Career" },
   { id: "investigations", label: "Investigations" },
   { id: "field", label: "Field" },
   { id: "podium", label: "Podium" },
